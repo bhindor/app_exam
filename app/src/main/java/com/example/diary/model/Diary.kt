@@ -2,6 +2,7 @@ package com.example.diary.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "diary_table")
 data class Diary(
@@ -10,4 +11,4 @@ data class Diary(
     val title: String,
     val content: String,
     val data: Long = System.currentTimeMillis()
-)
+) : Serializable

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diary.R
 import com.example.diary.databinding.ActivityMainBinding
 import com.example.diary.model.DiaryDatabase
+import com.example.diary.presentation.detail.DetailActivity
 import com.example.diary.presentation.write.WriteActivity
 import kotlinx.coroutines.launch
 
@@ -38,18 +39,29 @@ class MainActivity : AppCompatActivity() {
         val db = DiaryDatabase.getDatabase(this)
         val dao = db.diaryDao()
 
-        // TODO : 데이터베이스 연결
-        // TODO : 리사이클러뷰 연결
-        // TODO : 삭제 이벤트
+        val adapter = DiaryRecyclerAdapter(
 
-        val adapter = DiaryRecyclerAdapter { selectedDiary ->
-            lifecycleScope.launch {
-                dao.deleteDiary(selectedDiary)
-                Toast.makeText(this@MainActivity, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            onItemClick = { diary ->
+                val intent = Intent(this, DetailActivity::class.java)
+                intent.putExtra("diary", diary)
+                startActivity(intent)
+            },
+
+            onDeleteClick = { diary ->
+                lifecycleScope.launch {
+                    dao.deleteDiary(diary)
+                    Toast.makeText(this@MainActivity, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
+        )
 
         binding.rvDiary.adapter = adapter
         binding.rvDiary.layoutManager = LinearLayoutManager(this)
+
+        lifecycleScope.launch {
+            dao.getAllDiaries().collect { diaries ->
+                adapter.setList(diaries)
+            }
+        }
     }
 }
