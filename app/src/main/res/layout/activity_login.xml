@@ -52,7 +52,7 @@
         android:layout_marginTop="5dp"
         android:background="@drawable/box_background"
         android:hint="비밀번호를 입력해주세요."
-        android:inputType="number"
+        android:inputType="numberPassword"
         android:paddingHorizontal="12dp"
         android:textColor="@color/black"
         android:textSize="12sp"
